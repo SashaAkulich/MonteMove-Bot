@@ -1,4 +1,6 @@
-TELEGRAM_BOT_TOKEN=ваш_токен_бота
-GOOGLE_SHEET_ID=id_вашей_таблицы
-GOOGLE_CREDENTIALS_JSON={"type":"service_account",...}
-WEBHOOK_URL=https://ваш-домен.pythonanywhere.com/webhook
+.env
+__pycache__/
+*.pyc
+venv/
+*.log
+.DS_Store
