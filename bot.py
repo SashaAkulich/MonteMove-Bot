@@ -4,6 +4,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from storage import VisitStorage
 from sheets import GoogleSheetsManager
 
+
 class MonteMoveBot:
     def __init__(self, token: str, sheets: GoogleSheetsManager, storage: VisitStorage):
         self.bot = Bot(token=token)
@@ -18,59 +19,56 @@ class MonteMoveBot:
     
     def _register_handlers(self):
         
-      # bot.py - обновлённый handle_start (заменяйте ВЕСЬ метод)
-@self.dp.message_handler(commands=['start'])
-async def handle_start(message: types.Message):
-    args = message.get_args()
-    visit_id = args.strip() if args else None
-    
-    # 🔥 ВСЕГДА записываем пользователя в таблицу, даже без visit_id
-    try:
-        print(f"📝 Handling /start: user_id={message.from_user.id}, username={message.from_user.username}, visit_id={visit_id}")
-        
-        # Если есть visit_id — пытаемся получить UTM из хранилища
-        utm_data = {}
-        if visit_id:
-            utm_data = self.storage.get_and_delete(visit_id) or {}
-            if utm_data:
-                print(f"🔍 Found UTM for visit_id={visit_id}: {utm_data}")
-        
-        # Записываем в таблицу (всегда!)
-        self.sheets.log_lead(
-            telegram_id=message.from_user.id,
-            username=message.from_user.username,
-            utm_data=utm_data,
-            visit_id=visit_id or "direct_start"  # ← Помечаем прямой запуск
-        )
-        print(f"✅ Lead logged to Google Sheets!")
-        
-    except Exception as e:
-        print(f"❌ ERROR in handle_start: {e}")
-        import traceback
-        traceback.print_exc()
-    
-    # Приветственное сообщение (без изменений)
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add("🇲🇪 Черногория", "🇷🇸 Сербия")
-    keyboard.add("💱 Обмен валют", "📄 Документы")
-    keyboard.add("👨‍💼 Связаться с менеджером")
-    
-    await message.answer(
-        "Здравствуйте! Добро пожаловать в **MonteMove** 🤝\n\n"
-        "Мы помогаем с переездом и легализацией в Черногории и Сербии:\n\n"
-        "🇲🇪 **Черногория**:\n"
-        "• ВНЖ через бизнес / Digital Nomad\n"
-        "• Обмен валют с доставкой\n"
-        "• Перевод документов, бухгалтерия\n"
-        "• Недвижимость и трансфер\n\n"
-        "🇷🇸 **Сербия**:\n"
-        "• ВНЖ через ИП / компанию DOO\n"
-        "• Юридический адрес, аренда\n"
-        "• Обмен валют, грузоперевозки\n\n"
-        "Выберите направление или опишите ваш запрос 👇",
-        reply_markup=keyboard,
-        parse_mode="Markdown"
-    )
+        @self.dp.message_handler(commands=['start'])
+        async def handle_start(message: types.Message):
+            args = message.get_args()
+            visit_id = args.strip() if args else None
+            
+            # 🔥 ВСЕГДА записываем пользователя в таблицу
+            try:
+                print(f"📝 Handling /start: user_id={message.from_user.id}, username={message.from_user.username}, visit_id={visit_id}")
+                
+                utm_data = {}
+                if visit_id:
+                    utm_data = self.storage.get_and_delete(visit_id) or {}
+                    if utm_data:
+                        print(f"🔍 Found UTM for visit_id={visit_id}: {utm_data}")
+                
+                self.sheets.log_lead(
+                    telegram_id=message.from_user.id,
+                    username=message.from_user.username,
+                    utm_data=utm_data,
+                    visit_id=visit_id or "direct_start"
+                )
+                print(f"✅ Lead logged to Google Sheets!")
+                
+            except Exception as e:
+                print(f"❌ ERROR in handle_start: {e}")
+                import traceback
+                traceback.print_exc()
+            
+            # Приветственное сообщение
+            keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            keyboard.add("🇲🇪 Черногория", "🇷🇸 Сербия")
+            keyboard.add("💱 Обмен валют", "📄 Документы")
+            keyboard.add("👨‍💼 Связаться с менеджером")
+            
+            await message.answer(
+                "Здравствуйте! Добро пожаловать в **MonteMove** 🤝\n\n"
+                "Мы помогаем с переездом и легализацией в Черногории и Сербии:\n\n"
+                "🇲🇪 **Черногория**:\n"
+                "• ВНЖ через бизнес / Digital Nomad\n"
+                "• Обмен валют с доставкой\n"
+                "• Перевод документов, бухгалтерия\n"
+                "• Недвижимость и трансфер\n\n"
+                "🇷🇸 **Сербия**:\n"
+                "• ВНЖ через ИП / компанию DOO\n"
+                "• Юридический адрес, аренда\n"
+                "• Обмен валют, грузоперевозки\n\n"
+                "Выберите направление или опишите ваш запрос 👇",
+                reply_markup=keyboard,
+                parse_mode="Markdown"
+            )
         
         @self.dp.message_handler(text=["🇲🇪 Черногория", "🇷🇸 Сербия"])
         async def handle_country(message: types.Message):
