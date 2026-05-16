@@ -1,3 +1,4 @@
+# bot.py
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from storage import VisitStorage
@@ -10,8 +11,8 @@ class MonteMoveBot:
         self.sheets = sheets
         self.storage = storage
         
-       
-        Bot.set_current(self.bot) 
+        # Регистрация бота в контексте для вебхука (aiogram 2.x)
+        Bot.set_current(self.bot)
         
         self._register_handlers()
     
@@ -26,7 +27,7 @@ class MonteMoveBot:
             if visit_id:
                 utm = self.storage.get_and_delete(visit_id)
                 if utm:
-                     print(f"🔍 Found UTM for visit_id={visit_id}: {utm}")  # ← Добавьте эту строку
+                    print(f"🔍 Found UTM for visit_id={visit_id}: {utm}")
                     self.sheets.log_lead(
                         telegram_id=message.from_user.id,
                         username=message.from_user.username,
@@ -34,7 +35,7 @@ class MonteMoveBot:
                         visit_id=visit_id
                     )
             
-            # Приветственное сообщение с услугами [[сайт]]
+            # Приветственное сообщение с услугами
             keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
             keyboard.add("🇲🇪 Черногория", "🇷🇸 Сербия")
             keyboard.add("💱 Обмен валют", "📄 Документы")
@@ -85,7 +86,6 @@ class MonteMoveBot:
         
         @self.dp.message_handler(content_types=['text'])
         async def handle_text(message: types.Message):
-            # Просто подтверждаем получение сообщения
             await message.answer(
                 "✅ Спасибо! Ваше сообщение получено.\n"
                 "Менеджер изучит запрос и ответит в ближайшее время 🤝"
