@@ -1,4 +1,3 @@
-# bot.py
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from storage import VisitStorage
@@ -10,6 +9,10 @@ class MonteMoveBot:
         self.dp = Dispatcher(self.bot, storage=MemoryStorage())
         self.sheets = sheets
         self.storage = storage
+        
+       
+        Bot.set_current(self.bot) 
+        
         self._register_handlers()
     
     def _register_handlers(self):
