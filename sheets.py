@@ -38,8 +38,11 @@ class GoogleSheetsManager:
                 "utm_term", "utm_content", "Raw UTM"
             ])
     
-    def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
-        """Запись лида в таблицу"""
+   def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
+    """Запись лида в таблицу с логированием"""
+    try:
+        print(f"📝 Logging lead: telegram_id={telegram_id}, visit_id={visit_id}")
+        
         row = [
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             telegram_id,
@@ -52,4 +55,11 @@ class GoogleSheetsManager:
             utm_data.get("utm_content", ""),
             "&".join(f"{k}={v}" for k, v in utm_data.items())
         ]
+        
         self.sheet.append_row(row)
+        print(f"✅ Lead logged successfully!")
+        
+    except Exception as e:
+        print(f"❌ ERROR logging lead: {e}")
+        import traceback
+        traceback.print_exc()
