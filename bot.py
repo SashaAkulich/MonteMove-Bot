@@ -26,6 +26,7 @@ class MonteMoveBot:
             if visit_id:
                 utm = self.storage.get_and_delete(visit_id)
                 if utm:
+                     print(f"🔍 Found UTM for visit_id={visit_id}: {utm}")  # ← Добавьте эту строку
                     self.sheets.log_lead(
                         telegram_id=message.from_user.id,
                         username=message.from_user.username,
