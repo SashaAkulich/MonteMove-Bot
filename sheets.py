@@ -15,7 +15,7 @@ class GoogleSheetsManager:
                 "https://www.googleapis.com/auth/drive"
             ])
         else:
-            # Если JSON не передан — пробуем загрузить из файла (для локальной разработки)
+            # Если JSON не передан — пробуем загрузить из файла
             creds = Credentials.from_service_account_file(
                 os.getenv('GOOGLE_CREDENTIALS_FILE', 'credentials.json'),
                 scopes=[
@@ -38,7 +38,7 @@ class GoogleSheetsManager:
                 "utm_term", "utm_content", "Raw UTM"
             ])
     
-    def log_lead(self, telegram_id: int, username: str, utm_ dict, visit_id: str):
+    def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
         """Запись лида в таблицу"""
         row = [
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
