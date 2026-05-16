@@ -42,31 +42,30 @@ class GoogleSheetsManager:
                 "utm_term", "utm_content", "Raw UTM"
             ])
     
-   # sheets.py - метод log_lead
-def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
-    """Запись лида в таблицу с логированием"""
-    try:
-        print(f"📝 [GoogleSheets] Writing: telegram_id={telegram_id}, username={username}, visit_id={visit_id}")
-        
-        row = [
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            telegram_id,
-            f"@{username}" if username else "N/A",
-            visit_id,
-            utm_data.get("utm_source", ""),
-            utm_data.get("utm_medium", ""),
-            utm_data.get("utm_campaign", ""),
-            utm_data.get("utm_term", ""),
-            utm_data.get("utm_content", ""),
-            "&".join(f"{k}={v}" for k, v in utm_data.items())
-        ]
-        
-        print(f"📝 [GoogleSheets] Row data: {row}")
-        self.sheet.append_row(row)
-        print(f"✅ [GoogleSheets] Successfully appended row!")
-        
-    except Exception as e:
-        print(f"❌ [GoogleSheets] ERROR: {type(e).__name__}: {e}")
-        import traceback
-        traceback.print_exc()
-        raise  # Пробрасываем ошибку дальше, чтобы видеть в логах
+    def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
+        """Запись лида в таблицу с логированием"""
+        try:
+            print(f"📝 [GoogleSheets] Writing: telegram_id={telegram_id}, username={username}, visit_id={visit_id}")
+            
+            row = [
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                telegram_id,
+                f"@{username}" if username else "N/A",
+                visit_id,
+                utm_data.get("utm_source", ""),
+                utm_data.get("utm_medium", ""),
+                utm_data.get("utm_campaign", ""),
+                utm_data.get("utm_term", ""),
+                utm_data.get("utm_content", ""),
+                "&".join(f"{k}={v}" for k, v in utm_data.items())
+            ]
+            
+            print(f"📝 [GoogleSheets] Row data: {row}")
+            self.sheet.append_row(row)
+            print(f"✅ [GoogleSheets] Successfully appended row!")
+            
+        except Exception as e:
+            print(f"❌ [GoogleSheets] ERROR: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
