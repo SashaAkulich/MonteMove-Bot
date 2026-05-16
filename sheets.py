@@ -5,15 +5,19 @@ import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
+
 class GoogleSheetsManager:
     def __init__(self, sheet_id: str, credentials_json: str = None):
         # Пробуем распарсить JSON-строку из переменной окружения
         if credentials_json and credentials_json.strip().startswith('{'):
             creds_info = json.loads(credentials_json)
-            creds = Credentials.from_service_account_info(creds_info, scopes=[
-                "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive"
-            ])
+            creds = Credentials.from_service_account_info(
+                creds_info,
+                scopes=[
+                    "https://www.googleapis.com/auth/spreadsheets",
+                    "https://www.googleapis.com/auth/drive"
+                ]
+            )
         else:
             # Если JSON не передан — пробуем загрузить из файла
             creds = Credentials.from_service_account_file(
@@ -38,28 +42,28 @@ class GoogleSheetsManager:
                 "utm_term", "utm_content", "Raw UTM"
             ])
     
-   def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
-    """Запись лида в таблицу с логированием"""
-    try:
-        print(f"📝 Logging lead: telegram_id={telegram_id}, visit_id={visit_id}")
-        
-        row = [
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            telegram_id,
-            f"@{username}" if username else "N/A",
-            visit_id,
-            utm_data.get("utm_source", ""),
-            utm_data.get("utm_medium", ""),
-            utm_data.get("utm_campaign", ""),
-            utm_data.get("utm_term", ""),
-            utm_data.get("utm_content", ""),
-            "&".join(f"{k}={v}" for k, v in utm_data.items())
-        ]
-        
-        self.sheet.append_row(row)
-        print(f"✅ Lead logged successfully!")
-        
-    except Exception as e:
-        print(f"❌ ERROR logging lead: {e}")
-        import traceback
-        traceback.print_exc()
+    def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
+        """Запись лида в таблицу с логированием"""
+        try:
+            print(f"📝 Logging lead: telegram_id={telegram_id}, visit_id={visit_id}")
+            
+            row = [
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                telegram_id,
+                f"@{username}" if username else "N/A",
+                visit_id,
+                utm_data.get("utm_source", ""),
+                utm_data.get("utm_medium", ""),
+                utm_data.get("utm_campaign", ""),
+                utm_data.get("utm_term", ""),
+                utm_data.get("utm_content", ""),
+                "&".join(f"{k}={v}" for k, v in utm_data.items())
+            ]
+            
+            self.sheet.append_row(row)
+            print(f"✅ Lead logged successfully!")
+            
+        except Exception as e:
+            print(f"❌ ERROR logging lead: {e}")
+            import traceback
+            traceback.print_exc()
