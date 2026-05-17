@@ -1,10 +1,8 @@
-# sheets.py
 import json
 import os
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
-
 
 class GoogleSheetsManager:
     def __init__(self, sheet_id: str, credentials_json: str = None):
@@ -37,9 +35,8 @@ class GoogleSheetsManager:
         headers = self.sheet.row_values(1)
         if not headers:
             self.sheet.append_row([
-                "Дата", "Telegram ID", "Username", "Visit ID",
-                "utm_source", "utm_medium", "utm_campaign", 
-                "utm_term", "utm_content", "Raw UTM"
+                "Telegram ID", "Username", "UTM Source", "UTM Medium", 
+                "UTM Campaign", "UTM Term", "UTM Content", "Visit ID", "Timestamp"
             ])
     
     def log_lead(self, telegram_id: int, username: str, utm_data: dict, visit_id: str):
@@ -47,17 +44,17 @@ class GoogleSheetsManager:
         try:
             print(f"📝 [GoogleSheets] Writing: telegram_id={telegram_id}, username={username}, visit_id={visit_id}")
             
+            # Порядок колонок под вашу текущую таблицу
             row = [
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                telegram_id,
-                f"@{username}" if username else "N/A",
-                visit_id,
-                utm_data.get("utm_source", ""),
-                utm_data.get("utm_medium", ""),
-                utm_data.get("utm_campaign", ""),
-                utm_data.get("utm_term", ""),
-                utm_data.get("utm_content", ""),
-                "&".join(f"{k}={v}" for k, v in utm_data.items())
+                telegram_id,                                    # Telegram ID
+                f"@{username}" if username else "N/A",         # Username
+                utm_data.get("utm_source", ""),                # UTM Source
+                utm_data.get("utm_medium", ""),                # UTM Medium
+                utm_data.get("utm_campaign", ""),              # UTM Campaign
+                utm_data.get("utm_term", ""),                  # UTM Term
+                utm_data.get("utm_content", ""),               # UTM Content
+                visit_id,                                       # Visit ID
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S")   # Timestamp
             ]
             
             print(f"📝 [GoogleSheets] Row data: {row}")
