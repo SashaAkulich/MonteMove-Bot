@@ -68,22 +68,21 @@ class MonteMoveBot:
                 parse_mode="Markdown"
             )
         
-        @self.dp.message_handler(text=["🇪 Черногория", "🇷🇸 Сербия"])
-        async def handle_country(message: types.Message):
-            country = message.text
-            services = {
-                "🇲 Черногория": "Черногория",
-                "🇷🇸 Сербия": "Сербия"
-            }
-            await message.answer(
-                f"Отлично! Вы выбрали **{services[country]}**.\n\n"
-                f"Напишите, что вас интересует:\n"
-                f"• Легализация / ВНЖ \n"
-                f"• Обмен валюты 💱\n"
-                f"• Регистрация компании 🏢\n"
-                f"• Другой вопрос ✍️"
-            )
-        
+      @self.dp.message_handler(text=["🇲🇪 Черногория", "🇷🇸 Сербия"]) 
+async def handle_country(message: types.Message):
+    country = message.text
+    services = {
+        "🇲🇪 Черногория": "Черногория", 
+        "🇷🇸 Сербия": "Сербия"
+    }
+    await message.answer(
+        f"Отлично! Вы выбрали **{services[country]}**.\n\n"
+        f"Напишите, что вас интересует:\n"
+        f"• Легализация / ВНЖ 🪪\n"
+        f"• Обмен валюты 💱\n"
+        f"• Регистрация компании 🏢\n"
+        f"• Другой вопрос ✍️"
+    )
         @self.dp.message_handler(text=["👨‍💼 Связаться с менеджером"])
         async def handle_contact(message: types.Message):
             await message.answer(
