@@ -1,7 +1,9 @@
+# bot.py
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from storage import VisitStorage
 from sheets import GoogleSheetsManager
+
 
 class MonteMoveBot:
     def __init__(self, token: str, sheets: GoogleSheetsManager, storage: VisitStorage):
@@ -41,20 +43,20 @@ class MonteMoveBot:
                 print(f"✅ Lead logged to Google Sheets!")
                 
             except Exception as e:
-                print(f" ERROR in handle_start: {e}")
+                print(f"❌ ERROR in handle_start: {e}")
                 import traceback
                 traceback.print_exc()
             
             # Приветственное сообщение
             keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            keyboard.add("🇲🇪 Черногория", "🇷 Сербия")
-            keyboard.add(" Обмен валют", "📄 Документы")
-            keyboard.add("👨‍ Связаться с менеджером")
+            keyboard.add("🇲🇪 Черногория", "🇷🇸 Сербия")
+            keyboard.add("💱 Обмен валют", "📄 Документы")
+            keyboard.add("👨‍💼 Связаться с менеджером")
             
             await message.answer(
                 "Здравствуйте! Добро пожаловать в **MonteMove** 🤝\n\n"
                 "Мы помогаем с переездом и легализацией в Черногории и Сербии:\n\n"
-                "🇲 **Черногория**:\n"
+                "🇲🇪 **Черногория**:\n"
                 "• ВНЖ через бизнес / Digital Nomad\n"
                 "• Обмен валют с доставкой\n"
                 "• Перевод документов, бухгалтерия\n"
@@ -68,28 +70,29 @@ class MonteMoveBot:
                 parse_mode="Markdown"
             )
         
-      @self.dp.message_handler(text=["🇲🇪 Черногория", "🇷🇸 Сербия"]) 
-async def handle_country(message: types.Message):
-    country = message.text
-    services = {
-        "🇲🇪 Черногория": "Черногория", 
-        "🇷🇸 Сербия": "Сербия"
-    }
-    await message.answer(
-        f"Отлично! Вы выбрали **{services[country]}**.\n\n"
-        f"Напишите, что вас интересует:\n"
-        f"• Легализация / ВНЖ 🪪\n"
-        f"• Обмен валюты 💱\n"
-        f"• Регистрация компании 🏢\n"
-        f"• Другой вопрос ✍️"
-    )
+        @self.dp.message_handler(text=["🇲🇪 Черногория", "🇷🇸 Сербия"])
+        async def handle_country(message: types.Message):
+            country = message.text
+            services = {
+                "🇲🇪 Черногория": "Черногория",
+                "🇷🇸 Сербия": "Сербия"
+            }
+            await message.answer(
+                f"Отлично! Вы выбрали **{services[country]}**.\n\n"
+                f"Напишите, что вас интересует:\n"
+                f"• Легализация / ВНЖ 🪪\n"
+                f"• Обмен валюты 💱\n"
+                f"• Регистрация компании 🏢\n"
+                f"• Другой вопрос ✍️"
+            )
+        
         @self.dp.message_handler(text=["👨‍💼 Связаться с менеджером"])
         async def handle_contact(message: types.Message):
             await message.answer(
                 "✅ Ваш запрос принят!\n"
                 "Менеджер свяжется с вами в ближайшее время.\n\n"
                 "Для срочных вопросов:\n"
-                " info@montemove.com\n"
+                "📧 info@montemove.com\n"
                 "🌐 montemove.com"
             )
         
@@ -97,7 +100,7 @@ async def handle_country(message: types.Message):
         async def handle_text(message: types.Message):
             await message.answer(
                 "✅ Спасибо! Ваше сообщение получено.\n"
-                "Менеджер изучит запрос и ответит в ближайшее время "
+                "Менеджер изучит запрос и ответит в ближайшее время 🤝"
             )
     
     async def set_webhook(self, webhook_url: str):
